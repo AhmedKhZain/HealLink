@@ -1,5 +1,6 @@
 ﻿using ErrorOr;
-using healLink.Application.Common.Interfaces;
+using healLink.Application.Common.Interfaces.Repositories;
+using healLink.Application.Common.Interfaces.Service;
 using HealLink.Application.Common.Helpers;
 using HealLink.Domain.Users;
 using MediatR;
@@ -40,13 +41,19 @@ namespace healLink.Application.Authentication.Commands.CreateToken
 
             var token =  _tokenGenerator.GenerateUserTokens(user,tokenType);
 
+            
+            var result = await _unitOfWork.ExecuteInTransactionAsync(async()=>
+            {
+                await _tokenRepsitory.AddAsync(token);
+            });
+            if (result.IsError)
+                return result.Errors;
+
             await _emailService.SendEmailAsync(
                 request.Email,
                 $"Your {request.Type} Token From HealLink",
-                EmailBodyTemplates.GenerateTemplate(user.NameToShow, token.Token,token.Type)
+                EmailBodyTemplates.GenerateTemplate(user.NameToShow, token.Token, token.Type)
             );
-            await _tokenRepsitory.AddAsync(token);
-            await _unitOfWork.CommitChangesAsync();
 
             return new Success();
 

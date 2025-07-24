@@ -1,4 +1,4 @@
-﻿using healLink.Application.Common.Interfaces;
+﻿using healLink.Application.Common.Interfaces.Service;
 using HealLink.Domain.Users;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

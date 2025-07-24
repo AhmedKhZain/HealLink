@@ -1,6 +1,6 @@
 using HealLink.Domain.Users;
 
-namespace healLink.Application.Common.Interfaces;
+namespace healLink.Application.Common.Interfaces.Service;
 
 public interface ITokenGenerator
 {

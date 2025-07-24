@@ -1,6 +1,6 @@
 using HealLink.Domain.Users;
 
-namespace healLink.Application.Common.Interfaces;
+namespace healLink.Application.Common.Interfaces.Repositories;
 
 public interface IUsersRepository
 {
@@ -9,5 +9,5 @@ public interface IUsersRepository
     Task<User?> GetByEmailAsNoTrckingAsync(string email);
     Task<User?> GetByEmailAsync(string email);
     Task<User?> GetByIdAsync(Guid userId);
-    void UpdateAsync(User user);
+    void Update(User user);
 }

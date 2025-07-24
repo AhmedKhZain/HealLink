@@ -10,7 +10,7 @@ using Microsoft.VisualBasic;
 namespace HealLink.Domain.Patients
 {
     public class Patient
-    {   
+    {
         public Guid Id { get; private set; }
         public DateTime? CreatedAt { get; private set; } = DateTime.UtcNow;
         public bool IsDeleted { get; private set; } = false;

@@ -45,6 +45,9 @@ namespace HealLink.Infrastructure.Persistence.Configurations.Users
             .HasIndex(u => u.Email)
             .IsUnique();
 
+            builder.Ignore(u => u.Is2FAEnabled);
+
+
 
         }
     }

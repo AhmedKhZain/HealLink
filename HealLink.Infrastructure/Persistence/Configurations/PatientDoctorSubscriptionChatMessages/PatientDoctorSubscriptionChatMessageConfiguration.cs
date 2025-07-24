@@ -1,4 +1,4 @@
-﻿using HealLink.Domain.PatientDoctorSubscriptionChatMessages;
+﻿using HealLink.Domain.PatientDoctorSubscriptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;

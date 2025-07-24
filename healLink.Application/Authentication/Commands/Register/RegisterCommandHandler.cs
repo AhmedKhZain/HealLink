@@ -2,8 +2,10 @@ using ErrorOr;
 using MediatR;
 using HealLink.Application.Authentication.Common;
 using HealLink.Domain.Users;
-using healLink.Application.Common.Interfaces;
 using HealLink.Domain.Common;
+using HealLink.Domain.Patients;
+using healLink.Application.Common.Interfaces.Service;
+using healLink.Application.Common.Interfaces.Repositories;
 
 namespace HealLink.Application.Authentication.Commands.Register;
 
@@ -11,6 +13,7 @@ public class RegisterCommandHandler(
     ITokenGenerator _tokenGenerator,
     IPasswordHasher _passwordHasher,
     IUsersRepository _usersRepository,
+    IPatientRepository _iPationtRepsitory,
     IUnitOfWork _unitOfWork)
         : IRequestHandler<RegisterCommand, ErrorOr<AuthenticationResult>>
 {
@@ -34,8 +37,16 @@ public class RegisterCommandHandler(
             command.Email,
             hashPasswordResult.Value);
 
-        await _usersRepository.AddUserAsync(user);
-        await _unitOfWork.CommitChangesAsync();
+
+
+        var result = await _unitOfWork.ExecuteInTransactionAsync(async () =>
+        {
+            await _usersRepository.AddUserAsync(user);
+            await _iPationtRepsitory.AddPatientAsync(new Patient(user.Id));
+        });
+
+        if (result.IsError)
+            return result.Errors;
 
         var token = _tokenGenerator.GenerateJwtToken(user);
 

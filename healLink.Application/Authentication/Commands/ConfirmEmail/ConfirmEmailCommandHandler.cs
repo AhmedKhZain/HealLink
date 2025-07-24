@@ -1,5 +1,6 @@
 ﻿using ErrorOr;
-using healLink.Application.Common.Interfaces;
+using healLink.Application.Common.Interfaces.Repositories;
+using healLink.Application.Common.Interfaces.Service;
 using HealLink.Domain.Users;
 using MediatR;
 
@@ -30,13 +31,17 @@ namespace healLink.Application.Authentication.Commands.ConfirmEmail
 
             if (Token.IsExpired())
                 return Error.Custom(code: "Expired", description: "The token has expired.", type: 3);
-            if (Token.IsUsed)
-                return Error.Custom(code: "Used", description: "The token has already been used.", type: 3);
+
 
             Token.MarkUsed();
+            var result = await _unitOfWork.ExecuteInTransactionAsync(() =>
+            {
+                _tokenRepsitory.Update(Token);
+                return Task.CompletedTask;
+            });
 
-            _tokenRepsitory.Update(Token);
-            await _unitOfWork.CommitChangesAsync();
+            if (result.IsError)
+                return result.Errors;
 
             return new Success();
 

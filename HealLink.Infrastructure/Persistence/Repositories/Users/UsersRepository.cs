@@ -1,11 +1,11 @@
-﻿using healLink.Application.Common.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HealLink.Domain.Users;
 using Microsoft.EntityFrameworkCore;
+using healLink.Application.Common.Interfaces.Repositories;
 
 namespace HealLink.Infrastructure.Persistence.Repositories.Users
 {
@@ -47,7 +47,7 @@ namespace HealLink.Infrastructure.Persistence.Repositories.Users
         => await _context.Users
             .FirstOrDefaultAsync(u => u.Id == userId);
 
-        public void UpdateAsync(User user)
+        public void Update(User user)
         => _context.Users
             .Update(user);
 

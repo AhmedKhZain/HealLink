@@ -2,8 +2,9 @@ using ErrorOr;
 
 using MediatR;
 using HealLink.Application.Authentication.Common;
-using healLink.Application.Common.Interfaces;
 using HealLink.Domain.Common;
+using healLink.Application.Common.Interfaces.Service;
+using healLink.Application.Common.Interfaces.Repositories;
 
 
 namespace HealLink.Application.Authentication.Queries.Login;

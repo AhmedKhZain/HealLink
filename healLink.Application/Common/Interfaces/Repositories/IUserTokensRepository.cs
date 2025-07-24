@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace healLink.Application.Common.Interfaces
+namespace healLink.Application.Common.Interfaces.Repositories
 {
     public interface IUserTokensRepository
     {

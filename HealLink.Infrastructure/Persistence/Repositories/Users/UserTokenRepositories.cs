@@ -1,4 +1,4 @@
-﻿using healLink.Application.Common.Interfaces;
+﻿using healLink.Application.Common.Interfaces.Repositories;
 using HealLink.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -30,7 +30,7 @@ namespace HealLink.Infrastructure.Persistence.Repositories.Users
         public Task<UserToken?> GetByTokenAndTypeAsyncAndUserId(string token, TokenTypes type, Guid userId)
             => _context.UserTokens
                 .Include(t => t.User)
-                .FirstOrDefaultAsync(t => t.UserId == userId && t.Token == token && t.Type == type );
+                .FirstOrDefaultAsync(t => t.UserId == userId && t.Token == token && t.Type == type&& !t.IsUsed );
 
         //public async Task<UserToken?> GetByTokenAsync(string token)
         //    => await _context.UserTokens

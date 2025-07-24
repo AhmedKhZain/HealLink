@@ -1,4 +1,5 @@
-﻿using healLink.Application.Common.Interfaces;
+﻿using healLink.Application.Common.Interfaces.Repositories;
+using healLink.Application.Common.Interfaces.Service;
 using HealLink.Domain.Common;
 using HealLink.Infrastructure.Common.Authentication.PasswordHasher;
 using HealLink.Infrastructure.Common.Authentication.TokenGenerator;

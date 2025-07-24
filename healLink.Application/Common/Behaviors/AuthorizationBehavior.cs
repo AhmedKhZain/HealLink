@@ -1,8 +1,8 @@
 using System.Reflection;
 using ErrorOr;
 using HealLink.Application.Common.Authorization;
-using healLink.Application.Common.Interfaces;
 using MediatR;
+using healLink.Application.Common.Interfaces.Service;
 
 namespace HealLink.Application.Common.Behaviors;
 

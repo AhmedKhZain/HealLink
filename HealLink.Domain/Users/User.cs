@@ -17,6 +17,7 @@ public class User
 
     public string? ProfilePhotoLink = null!;
     public Role Role { get; private set; } = Role.Patient;
+    public bool Is2FAEnabled { get; private set; } = false;
 
     public ICollection<UserToken> Tokens = new List<UserToken>();
 
@@ -64,8 +65,14 @@ public class User
         return Result.Success;
     }
 
-    public void UpdatePassword(string newPasswordHash)
+    public ErrorOr<Success> UpdatePassword(string newPasswordHash, IPasswordHasher _passwordHasher)
     {
-        _passwordHash = newPasswordHash;
+        var result = _passwordHasher.HashPassword(newPasswordHash);
+        if (result.IsError)
+        {
+            return result.Errors;
+        }
+        _passwordHash = result.Value;
+        return Result.Success;
     }
 }

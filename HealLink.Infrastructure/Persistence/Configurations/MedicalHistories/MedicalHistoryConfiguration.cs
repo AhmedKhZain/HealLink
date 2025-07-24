@@ -36,6 +36,8 @@ namespace HealLink.Infrastructure.Persistence.Configurations.MedicalHistories
 
             builder.HasIndex(builder => builder.PatientId)
                 .HasDatabaseName("IX_MedicalHistories_PatientId");
+            builder.HasIndex(builder => builder.Type)
+                .HasDatabaseName("IX_MedicalHistories_Type");
 
 
 

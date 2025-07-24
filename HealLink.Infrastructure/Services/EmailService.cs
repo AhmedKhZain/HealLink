@@ -1,4 +1,4 @@
-﻿using healLink.Application.Common.Interfaces;
+﻿using healLink.Application.Common.Interfaces.Service;
 using HealLink.Infrastructure.Email;
 using Microsoft.Extensions.Options;
 using System;

@@ -1,11 +1,10 @@
-﻿using HealLink.Domain.PatientDoctorSubscriptions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HealLink.Domain.PatientDoctorSubscriptionChatMessages
+namespace HealLink.Domain.PatientDoctorSubscriptions
 {
     public class PatientDoctorSubscriptionChatMessage
     {

@@ -1,5 +1,6 @@
 ﻿using ErrorOr;
-using healLink.Application.Common.Interfaces;
+using healLink.Application.Common.Interfaces.Repositories;
+using healLink.Application.Common.Interfaces.Service;
 using HealLink.Application.Authentication.Common;
 using HealLink.Domain.Users;
 using MediatR;
@@ -13,7 +14,9 @@ namespace healLink.Application.Authentication.Queries.LogInWithRefreshToken
 {
     public class LogInWithRefreshTokenQueryHandler
         (ITokenGenerator _tokenGenerator,
-         IUserTokensRepository _refreshTokenRepository)
+         IUserTokensRepository _refreshTokenRepository,
+         IUnitOfWork _unitOfWork,
+         IUserTokensRepository _tokensRepository)
         : IRequestHandler<LogInWithRefreshTokenQuery, ErrorOr<AuthenticationResult>>
     {
         public async Task<ErrorOr<AuthenticationResult>> Handle(LogInWithRefreshTokenQuery request, CancellationToken cancellationToken)
@@ -29,14 +32,18 @@ namespace healLink.Application.Authentication.Queries.LogInWithRefreshToken
                 return Error.Validation(
                     code: "RefreshToken",
                     description: "Refresh token is expired");
-            if (token.IsUsed)
-                return Error.Validation(
-                    code: "RefreshToken",
-                    description: "Refresh token is already used");
+
 
 
             var authToken = _tokenGenerator.GenerateJwtToken(token.User);
             token.MarkUsed();
+            var result = await _unitOfWork.ExecuteInTransactionAsync(() =>
+            {
+                _tokensRepository.Update(token);
+                return Task.CompletedTask;
+            });
+            if (result.IsError)
+                return result.Errors;
              
             return new AuthenticationResult(
                 Token: authToken,

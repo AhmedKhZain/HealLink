@@ -1,5 +1,6 @@
 ﻿using ErrorOr;
-using healLink.Application.Common.Interfaces;
+using healLink.Application.Common.Interfaces.Repositories;
+using healLink.Application.Common.Interfaces.Service;
 using HealLink.Application.Authentication.Common;
 using HealLink.Domain.Common;
 using HealLink.Domain.Users;
@@ -36,30 +37,37 @@ namespace healLink.Application.Authentication.Commands.PasswordReset
             {
                 return Error.Custom(code: "TokenMismatch", description: "The token does not match the user.", type: 4);
             }
+            if (token.IsExpired())
+            {
+                return Error.Custom(code:"TokenExpired" ,description:"The token has been Expired",type:4);
+            }
 
             var AuthToken = _tokenGenerator.GenerateJwtToken(user);
-            user.UpdatePassword(request.NewPassword);
-            var passwordHashResult = _pawwwordHasher.HashPassword(request.NewPassword);
+            
+            var passwordHashResult = user.UpdatePassword(request.NewPassword, _pawwwordHasher);
             if (passwordHashResult.IsError)
             {
                 return passwordHashResult.Errors;
             }
-            user.UpdatePassword(
-                passwordHashResult.Value
-            );
+            
             token.MarkUsed();
-           
 
-            _tokenRepsitory.Update(token);
-            _usersRepository.UpdateAsync(user);
-            await _unitOfWork.CommitChangesAsync();
 
-            var authenticationResult = new AuthenticationResult(
+
+            var result = await _unitOfWork.ExecuteInTransactionAsync(() =>
+            {
+                _tokenRepsitory.Update(token);
+                _usersRepository.Update(user);
+                return Task.CompletedTask;
+            });
+            if (result.IsError) 
+                return result.Errors;
+
+
+            return new AuthenticationResult(
                 user,
                 AuthToken
             );
-
-            return authenticationResult;
 
         }
     }

@@ -1,6 +1,5 @@
 ﻿using ErrorOr;
 using HealLink.Domain.Doctors;
-using HealLink.Domain.PatientDoctorSubscriptionChatMessages;
 using HealLink.Domain.Patients;
 using HealLink.Domain.Payments;
 using HealLink.Domain.Prescriptions;

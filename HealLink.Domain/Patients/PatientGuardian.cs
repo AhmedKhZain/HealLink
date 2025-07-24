@@ -34,6 +34,21 @@ namespace HealLink.Domain.Patients
                 GuardianId = guardianId;
                 RelationshipType = relationshipType;
             }
+            public PatientGuardian(Patient patient, Patient guard)
+            {
+                Id = Guid.NewGuid();
+                PatientId = patient.Id;
+                GuardianId = guard.Id;
+                RelationshipType = null;
+                this.Patient= patient;
+                this.Guardian= guard;
+
+            }
+            public void AddRelationship(string relationship)
+            {
+                RelationshipType=relationship;
+            }
+
 
         }
     }
