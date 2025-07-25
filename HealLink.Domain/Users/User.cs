@@ -24,7 +24,8 @@ public class User
 
     private User() { }
 
-    public User(string fullName,string nameToShow,
+    public User(string fullName,
+        string nameToShow,
         string email,
         string passwordHash, 
         Role? role = null,
@@ -42,14 +43,9 @@ public class User
         ProfilePhotoLink = profilePhotolink;
     }
 
-    public ErrorOr<Success> ChangePhoto(string newprofilePhotolink)
+    public void ChangePhoto(string newprofilePhotolink)
     {
-        if (string.IsNullOrWhiteSpace(newprofilePhotolink))
-        {
-            return Error.Validation("Photo", "Photo cannot be empty.");
-        }
         ProfilePhotoLink = newprofilePhotolink;
-        return Result.Success;
     }
 
     public bool IsCorrectPasswordHash(string password, IPasswordHasher passwordHasher)
@@ -59,11 +55,33 @@ public class User
 
     public ErrorOr<Success> ChangeRole(Role newRole)
     {
-        if (Role == newRole)
+        if (Role.Name == newRole.Name)
             return Error.Custom(code: "DoneBefore", description: "The role is already assingd to the user.",type:3);
         Role = newRole;
         return Result.Success;
     }
+    public void UpdateProfile(
+        string? showName,
+        string? fullName,
+        string? photoPath,
+        string? email)
+    {
+        if (showName is not null)
+            NameToShow = showName;
+
+        if (fullName is not null)
+            FullName = fullName;
+
+        if (photoPath is not null)
+            ProfilePhotoLink = photoPath;
+
+        if (email is not null)
+        {
+            Email = email;
+            IsVerified = false; 
+        }
+    }
+
 
     public ErrorOr<Success> UpdatePassword(string newPasswordHash, IPasswordHasher _passwordHasher)
     {
@@ -74,5 +92,10 @@ public class User
         }
         _passwordHash = result.Value;
         return Result.Success;
+    }
+
+    public void ConfirmEmail()
+    {
+        IsVerified = true;
     }
 }

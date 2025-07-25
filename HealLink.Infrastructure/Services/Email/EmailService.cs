@@ -1,5 +1,4 @@
 ﻿using healLink.Application.Common.Interfaces.Service;
-using HealLink.Infrastructure.Email;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -9,7 +8,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HealLink.Infrastructure.Services
+namespace HealLink.Infrastructure.Services.Email
 {
     public class EmailService : IEmailService
     {

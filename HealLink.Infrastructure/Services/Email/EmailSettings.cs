@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HealLink.Infrastructure.Email
+namespace HealLink.Infrastructure.Services.Email
 {
     public class EmailSettings
     {

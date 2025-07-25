@@ -3,10 +3,10 @@ using healLink.Application.Common.Interfaces.Service;
 using HealLink.Domain.Common;
 using HealLink.Infrastructure.Common.Authentication.PasswordHasher;
 using HealLink.Infrastructure.Common.Authentication.TokenGenerator;
-using HealLink.Infrastructure.Email;
 using HealLink.Infrastructure.Persistence;
 using HealLink.Infrastructure.Persistence.Repositories.Users;
-using HealLink.Infrastructure.Services;
+using HealLink.Infrastructure.Services.Email;
+using HealLink.Infrastructure.Services.Payment;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -25,23 +25,26 @@ public static class DependencyInjection
     {
         return services
             .AddAuthentication(configuration)
-            .AddPersistence(configuration);
+            .AddPersistence(configuration)
+            .AddServices(configuration);
     }
     public static IServiceCollection AddPersistence(this IServiceCollection services,IConfiguration configuration)
     {
         services.AddDbContext<HealLinkDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
-        services.AddScoped<IEmailService, EmailService>();
-        services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
-        services.AddSingleton<ITokenGenerator, TokenGenerator>();
+
         services.AddScoped<IUserTokensRepository, UserTokensRepository>();
-        services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
 
-        //services.AddScoped<IAdminsRepository, AdminsRepository>();
-        //services.AddScoped<ISubscriptionsRepository, SubscriptionsRepository>();
         services.AddScoped<IUsersRepository, UsersRepository>();
-        services.AddScoped<IUnitOfWork>(serviceProvider => serviceProvider.GetRequiredService<HealLinkDbContext>());
 
+        return services;
+    }
+    public static IServiceCollection AddServices(this IServiceCollection services,IConfiguration configuration)
+    {
+        services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
+        services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<IPaymentService,StripePaymentService>();
+        services.AddScoped<IUnitOfWork>(serviceProvider => serviceProvider.GetRequiredService<HealLinkDbContext>());
         return services;
     }
 
@@ -49,6 +52,7 @@ public static class DependencyInjection
     {
         var jwtSection = configuration.GetSection(JwtSettings.Section);
         services.Configure<JwtSettings>(jwtSection);
+        //services.Configure<JwtSettings>(configuration.GetSection("JwtSection"));
 
         var jwtSettings = jwtSection.Get<JwtSettings>();
 

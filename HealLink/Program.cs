@@ -1,5 +1,6 @@
 using HealLink.Application;
 using HealLink.Infrastructure;
+using HealLink.Presentation;
 namespace HealLink.Api
 {
     public class Program
@@ -13,24 +14,12 @@ namespace HealLink.Api
 
             // Add services to the container.
 
-            builder.Services.AddApplication();
-            builder.Services.AddInfrastructure(builder.Configuration);
+            builder.Services
+                .AddApplication()
+                .AddInfrastructure(builder.Configuration)
+                .AddPresentation();
 
 
-            builder.Services.AddControllers();
-            builder.Services.AddOpenApi();
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-            builder.Services.AddCors(options =>
-            {
-                options.AddPolicy("AllowAll", policy =>
-                {
-                    policy
-                        .AllowAnyOrigin()
-                        .AllowAnyHeader()
-                        .AllowAnyMethod();
-                });
-            });
 
             var app = builder.Build();
 

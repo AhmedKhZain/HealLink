@@ -45,13 +45,6 @@ public class AuthenticationController: ApiController
 
         var authResult = await _mediator.Send(query);
 
-        if (authResult.IsError && authResult.FirstError == AuthenticationErrors.InvalidCredentials)
-        {
-            return Problem(
-                detail: authResult.FirstError.Description,
-                statusCode: StatusCodes.Status401Unauthorized);
-        }
-
         return authResult.Match(
             authResult => Ok(authResult.FromAuthenticationResult()),
             Problem);
@@ -60,9 +53,11 @@ public class AuthenticationController: ApiController
     public async Task<IActionResult> CreateToken(CreateTokenRequest request)
     {
         var command = new CreateTokenCommand(request.Email, request.Type);
+
         var Result = await _mediator.Send(command);
+
         return Result.Match(
-            Result => Ok(Result),
+            Result => Ok(),
             Problem);
 
 
@@ -71,9 +66,11 @@ public class AuthenticationController: ApiController
     public async Task<IActionResult> ConfirmEmail(ConfirmEmailRequest request)
     {
         var command = new ConfirmEmailCommand(request.Email, request.Token,request.UserId);
+
         var Result = await _mediator.Send(command);
+
         return Result.Match(
-            Result => Ok(Result),
+            (Result) => Ok(),
             Problem);
     }
     [HttpPost("ResetPassword")]
@@ -82,6 +79,7 @@ public class AuthenticationController: ApiController
         var command = new ResetPasswordCommand(request.Email,request.Token,request.NewPassword);
         
         var Result = await _mediator.Send(command);
+
         return Result.Match(
             Result => Ok(Result),
             Problem);
@@ -91,12 +89,30 @@ public class AuthenticationController: ApiController
     [HttpGet("loginWithRefrshToken")]
     public async Task<IActionResult> LogInWithRefreshToken(LoginWithRefreshTokenRequest request)
     {
-        var command = new LogInWithRefreshTokenQuery(request.RefreshToken,request.UserId);
-        var Result = await _mediator.Send(command);
+        var query = new LogInWithRefreshTokenQuery(request.RefreshToken,request.UserId);
+
+        var Result = await _mediator.Send(query);
+
         return Result.Match(
             Result => Ok(Result),
             Problem);
     }
+    [HttpPost("UpdateProfileData")]
+    public async Task<IActionResult> UpdateProfileData(UpdateUserDataRequest request)
+    {
+        var command = request.ToUpdateUserDataCommand();
+
+        var Result = await _mediator.Send(command);
+
+        return Result.Match(
+            Result => Ok(Result),
+            Problem);
+    }
+
+
+
+
+
 
 
 

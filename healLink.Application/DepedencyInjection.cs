@@ -14,8 +14,8 @@ public static class DependencyInjection
             cfg.RegisterServicesFromAssemblyContaining(typeof(DependencyInjection));
         });
 
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-        //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
+        services.AddTransient(typeof(MediatR.IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+        services.AddTransient(typeof(MediatR.IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
 
         services.AddValidatorsFromAssemblyContaining(typeof(DependencyInjection));
 

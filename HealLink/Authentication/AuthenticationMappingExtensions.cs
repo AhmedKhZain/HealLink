@@ -1,4 +1,5 @@
-﻿using HealLink.Application.Authentication.Commands.Register;
+﻿using healLink.Application.Authentication.Commands.UpdateUserData;
+using HealLink.Application.Authentication.Commands.Register;
 using HealLink.Application.Authentication.Common;
 
 namespace HealLink.Api.Authentication
@@ -18,6 +19,9 @@ namespace HealLink.Api.Authentication
                 authResult.User.Email,
                 authResult.Token);
 
+
+        public static UpdateUserDataCommand ToUpdateUserDataCommand(this UpdateUserDataRequest request)
+            => new(request.Id, request.ShowName, request.FullName, request.PhotoPath, request.Email);
     }
 
 }

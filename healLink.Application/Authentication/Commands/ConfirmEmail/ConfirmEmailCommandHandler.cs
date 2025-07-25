@@ -32,7 +32,7 @@ namespace healLink.Application.Authentication.Commands.ConfirmEmail
             if (Token.IsExpired())
                 return Error.Custom(code: "Expired", description: "The token has expired.", type: 3);
 
-
+            user.ConfirmEmail();
             Token.MarkUsed();
             var result = await _unitOfWork.ExecuteInTransactionAsync(() =>
             {
