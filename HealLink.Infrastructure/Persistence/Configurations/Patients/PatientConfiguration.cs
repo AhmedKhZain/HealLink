@@ -27,7 +27,7 @@ namespace HealLink.Infrastructure.Persistence.Configurations.Patients
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Subscriptions
-            builder.HasMany(p => p.DoctorPatients)
+            builder.HasMany(p => p.Subscriptions)
                 .WithOne(s => s.Patient)
                 .HasForeignKey(s => s.PatientId)
                 .OnDelete(DeleteBehavior.Restrict);

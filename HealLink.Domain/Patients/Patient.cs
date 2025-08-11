@@ -16,7 +16,7 @@ namespace HealLink.Domain.Patients
         public bool IsDeleted { get; private set; } = false;
         public DateTime? DeletedAt { get; private set; } = null!;
 
-        public ICollection<PatientDoctorSubscription> DoctorPatients { get; private set; } = new List<PatientDoctorSubscription>();
+        public ICollection<PatientDoctorSubscription> Subscriptions { get; private set; } = new List<PatientDoctorSubscription>();
         public ICollection<MedicalHistory> MedicalHistories { get; private set; } = new List<MedicalHistory>();
         public ICollection<DoctorRequest> DoctorRequests { get; private set; } = new List<DoctorRequest>();
         public ICollection<PatientGuardian> Guardians { get; private set; } = new List<PatientGuardian>();
@@ -30,15 +30,14 @@ namespace HealLink.Domain.Patients
             Id = userId;
         }
 
-        public ErrorOr<Success> Delete()
+        public void Delete()
         {
             if (IsDeleted)
             {
-                return Error.Validation("PatientAlreadyDeleted", "This patient has already been deleted.");
+                throw new InvalidOperationException("already deleted") ;
             }
             IsDeleted = true;
             DeletedAt = DateTime.UtcNow;
-            return new Success();
         }
     }
 }

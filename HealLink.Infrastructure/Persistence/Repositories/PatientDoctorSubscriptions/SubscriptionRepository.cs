@@ -22,17 +22,37 @@ namespace HealLink.Infrastructure.Persistence.Repositories.PatientDoctorSubscrip
 
         public async Task<bool> ExistsActiveByPatientIdAndDoctorIdAsync(Guid patientId, Guid doctorId)
         => await _context.PatientDoctorSubscriptions
-            .AnyAsync(s => s.PatientId == patientId && s.DoctorId == doctorId );
+            .AnyAsync(s => s.PatientId == patientId && s.DoctorId == doctorId&& s.ExpiryDate>DateTime.UtcNow );
 
-        public async Task<IEnumerable<PatientDoctorSubscription?>> GetSubscriptionsByDoctorIdAsync(Guid doctorId, bool Tracking = false)
+        public async Task<PatientDoctorSubscription?> GetById(Guid subscriptionId, bool Tracking = false)
+        {
+            var query = _context.PatientDoctorSubscriptions;
+
+            if (!Tracking)
+                query.AsNoTracking();
+
+            return await query.FirstOrDefaultAsync(s => s.Id == subscriptionId);
+
+        }
+
+        public async Task<IEnumerable<PatientDoctorSubscription>?> GetDoctorHistoryByIdAsync(Guid doctorId, bool Tracking = false)
+        {
+            var query= _context.PatientDoctorSubscriptions.Where(s=>s.DoctorId == doctorId && s.ExpiryDate.Value < DateTime.Now);
+            if (!Tracking)
+                query= query.AsNoTracking();
+            return await query.ToListAsync();
+
+        }
+
+        public async Task<IEnumerable<PatientDoctorSubscription>?> GetSubscriptionsByDoctorIdAsync(Guid doctorId, bool Tracking = false)
         {
             return Tracking
                 ? await _context.PatientDoctorSubscriptions
-                    .Where(s => s.DoctorId == doctorId)
+                    .Where(s => s.DoctorId == doctorId && s.ExpiryDate.Value > DateTime.Now)
                     .ToListAsync()
                 : await _context.PatientDoctorSubscriptions
                     .AsNoTracking()
-                    .Where(s => s.DoctorId == doctorId)
+                    .Where(s => s.DoctorId == doctorId && s.ExpiryDate.Value > DateTime.Now)
                     .ToListAsync();
 
         }
@@ -47,15 +67,15 @@ namespace HealLink.Infrastructure.Persistence.Repositories.PatientDoctorSubscrip
                     .FirstOrDefaultAsync(s => s.PatientId == patientId && s.DoctorId == doctorId);
         }
 
-        public async Task<IEnumerable<PatientDoctorSubscription?>> GetSubscriptionsByPatientIdAsync(Guid patientId, bool Tracking = false)
+        public async Task<IEnumerable<PatientDoctorSubscription>?> GetSubscriptionsByPatientIdAsync(Guid patientId, bool Tracking = false)
         {
             return Tracking
                 ? await _context.PatientDoctorSubscriptions
-                    .Where(s => s.PatientId == patientId)
+                    .Where(s => s.PatientId == patientId && s.ExpiryDate.Value > DateTime.Now)
                     .ToListAsync()
                 : await _context.PatientDoctorSubscriptions
                     .AsNoTracking()
-                    .Where(s => s.PatientId == patientId)
+                    .Where(s => s.PatientId == patientId && s.ExpiryDate.Value > DateTime.Now)
                     .ToListAsync();
         }
 

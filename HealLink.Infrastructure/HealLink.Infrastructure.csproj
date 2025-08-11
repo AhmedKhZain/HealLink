@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Services\Payment\StripePaymentServiceV1.2ErrorOr.cs" />
+    <Compile Remove="Services\Payment\StripePaymentServiceV1_0.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Services\Payment\StripePaymentServiceV1.2ErrorOr.cs" />
+    <None Include="Services\Payment\StripePaymentServiceV1_0.cs" />
   </ItemGroup>
 
   <ItemGroup>

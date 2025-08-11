@@ -1,11 +1,8 @@
-﻿using ErrorOr;
-using HealLink.Domain.Doctors;
+﻿using HealLink.Domain.Doctors;
 using HealLink.Domain.PatientDoctorSubscriptions;
 using HealLink.Domain.Patients;
 using HealLink.Domain.Payments;
-using Microsoft.VisualBasic;
-using System;
-using System.Reflection.Metadata;
+
 
 namespace HealLink.Domain.Requests
 {
@@ -46,9 +43,11 @@ namespace HealLink.Domain.Requests
 
         public DoctorRequest(Guid doctorId, Guid senderId,
             DoctorSubscriptionPlan plan,
-            RequestType type, Guid? subscriptionId = null,
+            RequestType type,
+            Guid? subscriptionId = null,
             string? attachedFilePath=null)
         {
+            Id = Guid.NewGuid();
             DoctorId = doctorId;
             SenderId = senderId;
             Type = type;
@@ -57,14 +56,10 @@ namespace HealLink.Domain.Requests
             Plan = plan;
         }
 
-        public ErrorOr<PatientDoctorSubscription> Accept()
+        public PatientDoctorSubscription Accept()
         {
             if (IsAccepted != null)
-                return Error.Custom(code: "processed",
-                    description: "This request has already been processed.",
-                    type:1);
-
-
+                throw new InvalidOperationException();
 
 
             if (Type == RequestType.Renewal)
@@ -84,31 +79,36 @@ namespace HealLink.Domain.Requests
 
             return Subscription!;
         }
-
-        public ErrorOr<Success> Reject()
+        public void SetPayment(Payment payment)
         {
             if (IsAccepted != null)
-                return Error.Custom(code: "processed",
-                    description: "This request has already been processed.",
-                    type: 1);
+                throw new InvalidOperationException("This request has already been accepted or rejected.");
+            if (IsCancelled)
+                throw new InvalidOperationException("This request has already been cancelled.");
+            Payment = payment;
+        }
+        public void SetSubscription(PatientDoctorSubscription subscription)
+        {
+            SubscriptionId= subscription.Id;
+            Subscription = subscription;
+        }
+        public void Reject()
+        {
+            if (IsAccepted != null)
+                throw new InvalidOperationException();
 
             IsAccepted = false;
             DecisionDate = DateTime.UtcNow;
-            return new Success();
         }
-        public ErrorOr<Success> Cancel()
+
+        public void Cancel()
         {
             if (IsAccepted != null)
-                return Error.Custom(code: "processed",
-                    description: "This request has already been processed.",
-                    type: 1);
+                throw new InvalidOperationException();
             if (IsCancelled)
-                return Error.Custom(code: "already_cancelled",
-                    description: "This request has already been cancelled.",
-                    type: 1);
-            IsCancelled = true;
+                throw new InvalidOperationException("This request has already been cancelled.");
+            IsAccepted = false;
             DecisionDate = DateTime.UtcNow;
-            return new Success();
         }
     }
     

@@ -4,6 +4,12 @@ using HealLink.Domain.Common;
 using HealLink.Infrastructure.Common.Authentication.PasswordHasher;
 using HealLink.Infrastructure.Common.Authentication.TokenGenerator;
 using HealLink.Infrastructure.Persistence;
+using HealLink.Infrastructure.Persistence.Repositories.DoctorRequests;
+using HealLink.Infrastructure.Persistence.Repositories.Doctors;
+using HealLink.Infrastructure.Persistence.Repositories.MedicalHistories;
+using HealLink.Infrastructure.Persistence.Repositories.PatientDoctorSubscriptions;
+using HealLink.Infrastructure.Persistence.Repositories.Patients;
+using HealLink.Infrastructure.Persistence.Repositories.Payments;
 using HealLink.Infrastructure.Persistence.Repositories.Users;
 using HealLink.Infrastructure.Services.Email;
 using HealLink.Infrastructure.Services.Payment;
@@ -13,6 +19,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Stripe;
 using System.Text;
 
 
@@ -34,17 +41,26 @@ public static class DependencyInjection
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
         services.AddScoped<IUserTokensRepository, UserTokensRepository>();
-
+        services.AddScoped<IPatientRepository, PatientRepository>();
+        services.AddScoped<IMedicalHistoryRepository, MedicalHistoryRepository>();
         services.AddScoped<IUsersRepository, UsersRepository>();
-
+        services.AddScoped<IPatientGuardianRepository, PatientGuardianRepository>();
+        services.AddScoped<IDoctorRequestRepository, DoctorRequestRepository>();
+        services.AddScoped<IDoctorRepository, DoctorRepository>();
+        services.AddScoped<IPaymentRepository,PaymentRepository>();
+        services.AddScoped<ISubscriptionRepository,SubscriptionRepository>();
+        services.AddScoped<IRefundRepository, RefundRepository>();
         return services;
     }
     public static IServiceCollection AddServices(this IServiceCollection services,IConfiguration configuration)
     {
         services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
         services.AddScoped<IEmailService, EmailService>();
+        services.Configure<StripeSettings>(configuration.GetSection("StripeSettings"));
+        //StripeConfiguration.ApiKey = stripeSettings.SecretKey;
+
         services.AddScoped<IPaymentService,StripePaymentService>();
-        services.AddScoped<IUnitOfWork>(serviceProvider => serviceProvider.GetRequiredService<HealLinkDbContext>());
+        services.AddScoped<IUnitOfWork, EfUnitOfWork>();
         return services;
     }
 

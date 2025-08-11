@@ -96,42 +96,17 @@ namespace HealLink.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PatientId")
                         .HasDatabaseName("IX_MedicalHistories_PatientId");
 
+                    b.HasIndex("Type")
+                        .HasDatabaseName("IX_MedicalHistories_Type");
+
                     b.ToTable("MedicalHistories", (string)null);
-                });
-
-            modelBuilder.Entity("HealLink.Domain.PatientDoctorSubscriptionChatMessages.PatientDoctorSubscriptionChatMessage", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("DateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsFromPatient")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasMaxLength(1200)
-                        .HasColumnType("nvarchar(1200)");
-
-                    b.Property<Guid>("PatientDoctorSubscriptionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PatientDoctorSubscriptionId")
-                        .HasDatabaseName("IX_SubscriptionChatMessages_SubscriptionId");
-
-                    b.ToTable("SubscriptionChatMessages", (string)null);
                 });
 
             modelBuilder.Entity("HealLink.Domain.PatientDoctorSubscriptions.PatientDoctorSubscription", b =>
@@ -163,6 +138,44 @@ namespace HealLink.Infrastructure.Persistence.Migrations
                     b.ToTable("PatientDoctorSubscriptions", (string)null);
                 });
 
+            modelBuilder.Entity("HealLink.Domain.PatientDoctorSubscriptions.PatientDoctorSubscriptionChatMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AttachmentLink")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsFromPatient")
+                        .HasColumnType("bit");
+
+                    b.Property<DateOnly>("MassageDate")
+                        .HasColumnType("Date");
+
+                    b.Property<TimeOnly>("MassageTime")
+                        .HasColumnType("Time");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(1200)
+                        .HasColumnType("nvarchar(1200)");
+
+                    b.Property<Guid>("PatientDoctorSubscriptionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MassageDate")
+                        .HasDatabaseName("IX_SubscriptionChatMessages_MassageDate");
+
+                    b.HasIndex("PatientDoctorSubscriptionId")
+                        .HasDatabaseName("IX_SubscriptionChatMessages_SubscriptionId");
+
+                    b.ToTable("SubscriptionChatMessages", (string)null);
+                });
+
             modelBuilder.Entity("HealLink.Domain.Patients.HealLink.Domain.Patients.PatientGuardian", b =>
                 {
                     b.Property<Guid>("Id")
@@ -172,10 +185,10 @@ namespace HealLink.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("GuardianId")
+                    b.Property<Guid>("GuardianId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("PatientId")
+                    b.Property<Guid>("PatientId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("RelationshipType")
@@ -221,52 +234,58 @@ namespace HealLink.Infrastructure.Persistence.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("DoctorRequestId")
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DoctorRequestId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("DoneAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("PaidAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("PaymentProviderId")
                         .HasMaxLength(160)
                         .HasColumnType("nvarchar(160)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DoctorRequestId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[DoctorRequestId] IS NOT NULL");
 
                     b.ToTable("Payments", (string)null);
                 });
 
-            modelBuilder.Entity("HealLink.Domain.Prescriptions.Medication", b =>
+            modelBuilder.Entity("HealLink.Domain.Payments.RefundItem", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("PrescriptionId")
+                    b.Property<Guid>("PaymentId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<byte?>("TimesPerDay")
-                        .HasColumnType("tinyint");
+                    b.Property<string>("PaymentProviderId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Reason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RefundDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PrescriptionId")
-                        .HasDatabaseName("IX_Medications_PrescriptionId");
+                    b.HasIndex("PaymentId");
 
-                    b.ToTable("Medications", (string)null);
+                    b.ToTable("RefundItems");
                 });
 
             modelBuilder.Entity("HealLink.Domain.Prescriptions.Prescription", b =>
@@ -472,7 +491,26 @@ namespace HealLink.Infrastructure.Persistence.Migrations
                     b.Navigation("Patient");
                 });
 
-            modelBuilder.Entity("HealLink.Domain.PatientDoctorSubscriptionChatMessages.PatientDoctorSubscriptionChatMessage", b =>
+            modelBuilder.Entity("HealLink.Domain.PatientDoctorSubscriptions.PatientDoctorSubscription", b =>
+                {
+                    b.HasOne("HealLink.Domain.Doctors.Doctor", "Doctor")
+                        .WithMany("Subscriptions")
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HealLink.Domain.Patients.Patient", "Patient")
+                        .WithMany("Subscriptions")
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
+
+                    b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("HealLink.Domain.PatientDoctorSubscriptions.PatientDoctorSubscriptionChatMessage", b =>
                 {
                     b.HasOne("HealLink.Domain.PatientDoctorSubscriptions.PatientDoctorSubscription", "PatientDoctorSubscription")
                         .WithMany("ChatMassages")
@@ -483,36 +521,19 @@ namespace HealLink.Infrastructure.Persistence.Migrations
                     b.Navigation("PatientDoctorSubscription");
                 });
 
-            modelBuilder.Entity("HealLink.Domain.PatientDoctorSubscriptions.PatientDoctorSubscription", b =>
-                {
-                    b.HasOne("HealLink.Domain.Doctors.Doctor", "Doctor")
-                        .WithMany("Subscriptions")
-                        .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("HealLink.Domain.Patients.Patient", "Patient")
-                        .WithMany("DoctorPatients")
-                        .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Doctor");
-
-                    b.Navigation("Patient");
-                });
-
             modelBuilder.Entity("HealLink.Domain.Patients.HealLink.Domain.Patients.PatientGuardian", b =>
                 {
                     b.HasOne("HealLink.Domain.Patients.Patient", "Guardian")
                         .WithMany()
                         .HasForeignKey("GuardianId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("HealLink.Domain.Patients.Patient", "Patient")
                         .WithMany("Guardians")
                         .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Guardian");
 
@@ -535,21 +556,20 @@ namespace HealLink.Infrastructure.Persistence.Migrations
                     b.HasOne("HealLink.Domain.Requests.DoctorRequest", "DoctorRequest")
                         .WithOne("Payment")
                         .HasForeignKey("HealLink.Domain.Payments.Payment", "DoctorRequestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("DoctorRequest");
                 });
 
-            modelBuilder.Entity("HealLink.Domain.Prescriptions.Medication", b =>
+            modelBuilder.Entity("HealLink.Domain.Payments.RefundItem", b =>
                 {
-                    b.HasOne("HealLink.Domain.Prescriptions.Prescription", "Prescription")
-                        .WithMany("Medications")
-                        .HasForeignKey("PrescriptionId")
+                    b.HasOne("HealLink.Domain.Payments.Payment", "payment")
+                        .WithMany()
+                        .HasForeignKey("PaymentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Prescription");
+                    b.Navigation("payment");
                 });
 
             modelBuilder.Entity("HealLink.Domain.Prescriptions.Prescription", b =>
@@ -623,18 +643,13 @@ namespace HealLink.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("HealLink.Domain.Patients.Patient", b =>
                 {
-                    b.Navigation("DoctorPatients");
-
                     b.Navigation("DoctorRequests");
 
                     b.Navigation("Guardians");
 
                     b.Navigation("MedicalHistories");
-                });
 
-            modelBuilder.Entity("HealLink.Domain.Prescriptions.Prescription", b =>
-                {
-                    b.Navigation("Medications");
+                    b.Navigation("Subscriptions");
                 });
 
             modelBuilder.Entity("HealLink.Domain.Requests.DoctorRequest", b =>

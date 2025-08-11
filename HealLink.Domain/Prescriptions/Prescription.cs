@@ -13,6 +13,6 @@ namespace HealLink.Domain.Prescriptions
         public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
         public string PrescriptionText { get; private set; } = null!;
 
-        public ICollection<Medication> Medications { get; private set; } = new List<Medication>();
+        //public ICollection<Medication> Medications { get; private set; } = new List<Medication>();
     }
 }

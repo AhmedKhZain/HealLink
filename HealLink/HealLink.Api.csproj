@@ -18,11 +18,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\healLink.Application\healLink.Application.csproj" />
+    <ProjectReference Include="..\HealLink.Contracts\HealLink.Contracts.csproj" />
     <ProjectReference Include="..\HealLink.Infrastructure\HealLink.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Doctor\" />
   </ItemGroup>
 
 </Project>

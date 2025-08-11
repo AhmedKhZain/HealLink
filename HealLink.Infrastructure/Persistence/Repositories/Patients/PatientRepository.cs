@@ -38,9 +38,11 @@ namespace HealLink.Infrastructure.Persistence.Repositories.Patients
         public async Task<Patient?> GetPatientByUserIdAsync(Guid userId, bool Tracking = false)
         {
             return Tracking ? await _context.Patients
+                    .Include(p => p.User)
                     .FirstOrDefaultAsync(p => p.Id == userId)
                     : await _context.Patients
                     .AsNoTracking()
+                    .Include(p => p.User)
                     .FirstOrDefaultAsync(p => p.Id == userId);
         }
 

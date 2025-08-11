@@ -1,5 +1,7 @@
 ﻿using healLink.Application.Common.Interfaces.Repositories;
+using healLink.Application.Patients.Common;
 using HealLink.Domain.Patients.HealLink.Domain.Patients;
+using HealLink.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace HealLink.Infrastructure.Persistence.Repositories.Patients
@@ -7,60 +9,67 @@ namespace HealLink.Infrastructure.Persistence.Repositories.Patients
     public class PatientGuardianRepository : IPatientGuardianRepository
     {
 
-        private readonly HealLinkDbContext _Context;
+        private readonly HealLinkDbContext _context;
+
         public PatientGuardianRepository(HealLinkDbContext context)
         {
-            _Context = context;
+            _context = context;
         }
 
         public async Task AddPatientGuardianAsync(PatientGuardian guardian)
-        => await _Context.AddAsync(guardian);
+        => await _context.AddAsync(guardian);
 
         public void AddRelationship(PatientGuardian guardian)
-        => _Context.Update(guardian);
+        => _context.Update(guardian);
 
         public void DeletePatientGuardian(PatientGuardian guardian)
-        =>_Context.Remove(guardian);
+        => _context.Remove(guardian);
 
-        public async Task<IEnumerable<PatientGuardian?>> GetAllPatientGuardianByPatientIdAsync(Guid Patientid, bool Tracking = false)
+
+
+
+        public async Task<IEnumerable<PatientGuardianResponse>?> GetPatientGuardianResponsesByUserIdAsync
+            (Guid userId,
+            int pageNum,
+            int pageSize,
+            bool newistFirst = true)
         {
-            return Tracking 
-                ? await _Context.PatientGuardians
-                    .Where(p => p.PatientId == Patientid)
-                    .ToListAsync()
-                : await _Context.PatientGuardians
-                    .Where(p => p.PatientId == Patientid)
-                    .AsNoTracking()
-                    .ToListAsync();
+            var query = _context.PatientGuardians
+                .AsNoTracking()
+                .Where(p => p.PatientId == userId || p.GuardianId == userId)
+                .Select(p => new PatientGuardianResponse
+                {
+                    Id = p.Id,
+                    GuardianId = p.GuardianId,
+                    GuardianName = p.Guardian.User.NameToShow,
+                    GuardianPhotoLink = p.Guardian.User.ProfilePhotoLink,
+                    PatientId = p.PatientId,
+                    PatientName = p.Patient.User.NameToShow,
+                    PatientPhotoLink = p.Patient.User.ProfilePhotoLink,
+                    Relationship = p.RelationshipType ?? "",
+                    StartedAt = p.CreatedAt
+                });
 
+        query = newistFirst
+            ? query.OrderByDescending(p => p.StartedAt)
+            : query.OrderBy(p => p.StartedAt);
+
+        return await query
+            .Skip((pageNum - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
         }
 
-        public async Task<PatientGuardian?> GetPatientGuardianAsync(Guid id, bool Tracking = false)
+
+
+
+        public async Task<PatientGuardian?> GetPatientGuardianByIdAsync(Guid patientguardianId, bool Traking=false)
         {
-            return Tracking
-                ? await _Context.PatientGuardians
-                    .FirstOrDefaultAsync(p => p.Id == id)
-                : await _Context.PatientGuardians
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync((p => p.Id == id));
+            IQueryable<PatientGuardian> query = _context.PatientGuardians!;
+            if (!Traking)
+                query = query.AsNoTracking();
 
-
-        }
-
-        public async Task<IEnumerable<PatientGuardian?>> GetPatientGuardiansByPatientIdAsync(Guid Patientid, int PageNum, int PageSize, bool NewistFirst = true, bool Tracking = false)
-        {
-            return Tracking
-                ? await _Context.PatientGuardians
-                    .Where(P => P.PatientId == Patientid)
-                    .Skip((PageNum - 1) * PageSize).Take(PageSize)
-                    .ToListAsync()
-                : await _Context.PatientGuardians
-                    .Where(P => P.PatientId == Patientid)
-                    .Skip((PageNum - 1) * PageSize).Take(PageSize)
-                    .AsNoTracking()
-                    .ToListAsync();
-
-
+            return await query.FirstOrDefaultAsync(pg => pg.Id == patientguardianId);
         }
     }
 }

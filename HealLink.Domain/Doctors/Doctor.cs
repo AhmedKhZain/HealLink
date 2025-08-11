@@ -1,4 +1,5 @@
-﻿using HealLink.Domain.Admins;
+﻿using ErrorOr;
+using HealLink.Domain.Admins;
 using HealLink.Domain.PatientDoctorSubscriptions;
 using HealLink.Domain.Prescriptions;
 using HealLink.Domain.Requests;
@@ -14,9 +15,9 @@ namespace HealLink.Domain.Doctors
     public class Doctor
     {
         public Guid Id { get; private set; }
-        public string SyndicateIdImageLink { get; private set; } = null!;
-        public string NationalID { get; private set; } = null!;
-        public string PracticeLicenseNumber { get; private set; } = null!;
+        public string? SyndicateIdImageLink { get; private set; } = null!;
+        public string? NationalID { get; private set; } = null!;
+        public string? PracticeLicenseNumber { get; private set; } = null!;
         public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
         public bool IsApproved { get; private set; } = false;
         public DateTime? ApprovedAt { get; private set; } = null!;
@@ -27,12 +28,31 @@ namespace HealLink.Domain.Doctors
         public User User { get; private set; } = null!;
         
 
-        public Doctor(Guid userId, string syndicateIdImageLink, string nationalId, string licenseNumber)
+        public Doctor(Guid userId, string? syndicateIdImageLink=null, string? nationalId=null, string? licenseNumber=null)
         {
             Id = userId;
             SyndicateIdImageLink = syndicateIdImageLink;
             NationalID = nationalId;
             PracticeLicenseNumber = licenseNumber;
+            CreatedAt=DateTime.UtcNow;
+        }
+        public ErrorOr<Success> Approve (Guid adminId)
+        {
+            if (IsApproved)
+                return Error.Conflict("The Doctor is already approved by some one.");
+            ApprovedByAdminId = adminId;
+            ApprovedAt = DateTime.UtcNow;
+            IsApproved = true;
+            return Result.Success;
+        }
+        public void UpdateDoctorData(string? syndicateIdImageLink, string? nationalId, string? licenseNumber)
+        {
+            if (syndicateIdImageLink is not null)
+                SyndicateIdImageLink=syndicateIdImageLink;
+            if (nationalId is not null)
+                NationalID = nationalId;
+            if (licenseNumber is not null)
+                PracticeLicenseNumber=licenseNumber;
         }
         private Doctor() { }
 

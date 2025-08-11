@@ -25,6 +25,9 @@ namespace healLink.Application.Authentication.Commands.PasswordReset
             {
                 return Error.Custom(code: "NotFound", description: "No account with this email.", type: 4);
             }
+            Console.WriteLine($"Token: {request.Token}");
+            Console.WriteLine($"Type: {TokenTypes.PasswordReset}");
+            Console.WriteLine($"UserId: {user.Id}");
 
             var token = await _tokenRepsitory.GetByTokenAndTypeAsyncAndUserId(request.Token,TokenTypes.PasswordReset,user.Id);
 

@@ -16,77 +16,14 @@ using System.Transactions;
 
 namespace HealLink.Infrastructure.Persistence
 {
-    public class HealLinkDbContext:DbContext,IUnitOfWork
+    public class HealLinkDbContext:DbContext
     {
 
-        private IDbContextTransaction? _transaction;
 
         public HealLinkDbContext(DbContextOptions<HealLinkDbContext> options) : base(options)
         {
         }
 
-        public async Task CommitChangesAsync()
-            => await SaveChangesAsync();
-
-        public async Task StartTransactionAsync()
-        {
-            if (_transaction is not null)
-                return;
-
-            _transaction = await Database.BeginTransactionAsync();
-        }
-
-        public async Task CommitTransactionAsync()
-        {
-            await CommitChangesAsync();
-            if (_transaction is not null)
-            {
-                await _transaction.CommitAsync();
-                await _transaction.DisposeAsync();
-                _transaction = null;
-            }
-        }
-
-        public async Task RollbackTransactionAsync()
-        {
-            if (_transaction is not null)
-            {
-                await _transaction.RollbackAsync();
-                await _transaction.DisposeAsync();
-                _transaction = null;
-            }
-        }
-
-        public async Task<ErrorOr<Success>> ExecuteInTransactionAsync(Func<Task> action)
-        {
-            await StartTransactionAsync();
-
-            List<Error> errors = [];
-
-            try
-            {
-                await action();
-                await CommitChangesAsync();
-                await CommitTransactionAsync();
-
-                return new Success();
-            }
-            catch (Exception ex)
-            {
-                errors.Add(Error.Failure(code: ex.Source ?? "Transaction", description: ex.Message));
-
-                try
-                {
-                    await RollbackTransactionAsync();
-                }
-                catch (Exception rollbackEx)
-                {
-                    errors.Add(Error.Failure(code: rollbackEx.Source ?? "Rollback", description: rollbackEx.Message));
-                }
-
-                return ErrorOr<Success>.From(errors);
-            }
-        }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -104,11 +41,12 @@ namespace HealLink.Infrastructure.Persistence
         public DbSet<MedicalHistory> MedicalHistories { get; set; }
         public DbSet<Prescription> Prescriptions { get; set; }
         public DbSet<PatientDoctorSubscriptionChatMessage> PatientDoctorSubscriptionChatMessages { get; set; }
-        public DbSet<Medication> Medications { get; set; }
+        //public DbSet<Medication> Medications { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Admin> Admins { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<UserToken> UserTokens { get; set; }
+        public DbSet<RefundItem> RefundItems { get; set; }
 
     }
 }

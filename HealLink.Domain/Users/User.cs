@@ -98,4 +98,9 @@ public class User
     {
         IsVerified = true;
     }
+
+    public void NullThePassword()
+    {
+        _passwordHash = "";
+    }
 }

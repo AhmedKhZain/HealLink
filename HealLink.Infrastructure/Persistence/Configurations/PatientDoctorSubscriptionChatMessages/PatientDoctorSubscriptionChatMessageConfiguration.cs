@@ -21,10 +21,19 @@ namespace HealLink.Infrastructure.Persistence.Configurations.PatientDoctorSubscr
             builder.Property(pds => pds.Message)
                 .IsRequired()
                 .HasMaxLength(1200);
-            builder.Property(pds => pds.DateTime)
+
+            builder.Ignore(pds => pds.MassageDateTime);
+            builder.Property(m => m.MassageDate)
+                .HasColumnType("Date");
+            builder.Property(m => m.MassageTime)
+                .HasColumnType("Time");
+            builder.Property(m => m.AttachmentLink)
+                .HasMaxLength(500)
+                .IsRequired(false);
+            builder.Property(m => m.IsFromPatient)
                 .IsRequired();
-
-
+            builder.HasIndex(m=> m.MassageDate)
+                .HasDatabaseName("IX_SubscriptionChatMessages_MassageDate");
 
             builder.HasIndex(m => m.PatientDoctorSubscriptionId)
                 .HasDatabaseName("IX_SubscriptionChatMessages_SubscriptionId");

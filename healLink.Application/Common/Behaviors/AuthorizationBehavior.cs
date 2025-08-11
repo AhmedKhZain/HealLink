@@ -25,14 +25,18 @@ public class AuthorizationBehavior<TRequest, TResponse>(ICurrentUserProvider _cu
             return await next();
         }
 
-        var currentUser = _currentUserProvider.GetCurrentUser();
-
+        var currentUserRuselt = _currentUserProvider.GetCurrentUser();
+        if (currentUserRuselt.IsError)
+        {
+            return (dynamic)currentUserRuselt.Errors.First();
+        }
+        var currentUser = currentUserRuselt.Value;
 
         var requiredRoles = authorizationAttributes
             .SelectMany(authorizationAttribute => authorizationAttribute.Role?.Split(',') ?? [])
-            .SingleOrDefault();
+            .ToList();
 
-        if (requiredRoles==currentUser.Role)
+        if (!requiredRoles.Contains(currentUser.Role))
         {
             return (dynamic)Error.Unauthorized(description: "User is forbidden from taking this action");
         }

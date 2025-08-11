@@ -18,10 +18,10 @@ namespace HealLink.Domain.Patients
             public string? RelationshipType { get; private set; }
 
 
-            public Guid ?PatientId { get; private set; }
+            public Guid PatientId { get; private set; }
             public Patient Patient { get; private set; } = null!;
 
-            public Guid ?GuardianId { get; private set; }
+            public Guid GuardianId { get; private set; }
             public Patient Guardian { get; private set; } = null!;
 
 

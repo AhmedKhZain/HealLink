@@ -21,10 +21,10 @@ namespace HealLink.Infrastructure.Persistence.Configurations.Prescriptions
                 .IsRequired();
 
 
-            builder.HasMany(p => p.Medications)
-                   .WithOne(m => m.Prescription)
-                   .HasForeignKey(m => m.PrescriptionId)
-                   .OnDelete(DeleteBehavior.Cascade);
+            //builder.HasMany(p => p.Medications)
+            //       .WithOne(m => m.Prescription)
+            //       .HasForeignKey(m => m.PrescriptionId)
+            //       .OnDelete(DeleteBehavior.Cascade);
 
 
         }

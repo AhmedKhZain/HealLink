@@ -6,14 +6,14 @@ namespace HealLink.Domain.Payments
     {
         public Guid Id { get; private set; }
 
-        public Guid DoctorRequestId { get; private set; }
-        public DoctorRequest DoctorRequest { get; private set; } = null!;
+        public Guid? DoctorRequestId { get; private set; }
+        public DoctorRequest? DoctorRequest { get; private set; } = null!;
 
         public decimal Amount { get; private set; }
         public PaymentStatus Status { get; private set; } = PaymentStatus.Authorized;
         public DateTime? DoneAt { get; private set; }
         public string? PaymentProviderId { get; private set; }
-        public DateTime PaidAt { get; private set; }
+        public DateTime CreatedAt { get; private set; }
 
         private Payment() { }
 
@@ -24,7 +24,7 @@ namespace HealLink.Domain.Payments
             Amount = amount;
             Status = status;
             PaymentProviderId = paymentProviderId;
-            PaidAt = DateTime.UtcNow;
+            CreatedAt = DateTime.UtcNow;
         }
         public void MarkAsCaptured()
         {
@@ -36,7 +36,36 @@ namespace HealLink.Domain.Payments
             Status = PaymentStatus.Failed;
             DoneAt = DateTime.UtcNow;
         }
-
+        public void MarkAsFailedToCancel()
+        {
+            Status=PaymentStatus.FaildToCancel;
+            DoneAt = DateTime.UtcNow;
+        }
+        public void MarkAsRefunded()
+        {
+            Status = PaymentStatus.Refunded;
+            DoneAt = DateTime.UtcNow;
+        }
+        public void NullingTheRequest()
+        {
+            DoctorRequestId = null;
+            DoctorRequest = null;
+        }
+        public void AddingTheRequest(DoctorRequest request)
+        {
+            DoctorRequest = request;
+            DoctorRequestId = request.Id;
+        }
+        public void MarkAsAuthorized()
+        {
+            Status = PaymentStatus.Authorized;
+            DoneAt = null;
+        }
+        public void MarkAsCancelled()
+        {
+            Status = PaymentStatus.Cancelled;
+            DoneAt = DateTime.UtcNow;
+        }
 
     }
 }

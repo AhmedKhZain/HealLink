@@ -23,8 +23,8 @@ namespace HealLink.Infrastructure.Persistence.Configurations.Payments
                 .IsRequired();
             builder.Property(p => p.Status)
                 .HasConversion(
-                s=>s.Value,
-                s => Payment.PaymentStatus.FromValue(s));
+                s=>s.Name,
+                s => PaymentStatus.FromName(s,false));
 
             builder.Property(p => p.PaymentProviderId)
                 .HasMaxLength(160);
@@ -34,7 +34,9 @@ namespace HealLink.Infrastructure.Persistence.Configurations.Payments
                 .WithOne()
                 .HasForeignKey<Payment>(p => p.DoctorRequestId)
                 .OnDelete(DeleteBehavior.Cascade);
-            builder.Property(p => p.PaidAt)
+            builder.HasIndex(p => p.DoctorRequestId);
+
+            builder.Property(p => p.CreatedAt)
                 .IsRequired();
 
 

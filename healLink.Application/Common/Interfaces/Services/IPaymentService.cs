@@ -6,15 +6,14 @@ namespace HealLink.Infrastructure.Services.Payment
 {
     public interface IPaymentService
     {
-        public Task<PaymentIntent> AuthorizePayment(string currency, string paymentMethodId, DoctorSubscriptionPlan plan);
+        Task<PaymentIntent> AuthorizePayment(string paymentMethodId, DoctorSubscriptionPlan plan);
 
-        public Task<PaymentIntent> CapturePayment(string paymentIntentId);
+        Task<PaymentIntent> CapturePayment(string paymentIntentId);
 
-        public Task<PaymentIntent> CancelPayment(string paymentIntentId);
-
-
-
+        Task<PaymentIntent> CancelPayment(string paymentIntentId);
+        Task<Refund> RefundPayment(string paymentIntentId, long? amountInCents = null);
 
 
     }
 }
+

@@ -1,6 +1,7 @@
 ﻿using ErrorOr;
 using healLink.Application.Common.Interfaces.Service;
 using HealLink.Application.Common.Models;
+using System.Security.Claims;
 
 namespace HealLink.Api.Services
 {
@@ -14,13 +15,22 @@ namespace HealLink.Api.Services
 
         public ErrorOr<CurrentUser> GetCurrentUser()
         {
-            var id = Guid.Parse(_httpContextAccessor.HttpContext!.User.Claims
-                .SingleOrDefault(claim => claim.Type == "id")
-                .Value);
 
-            var role = _httpContextAccessor.HttpContext.User.Claims
-                .SingleOrDefault(claim => claim.Type == "role")
-                .Value;
+            var claims = _httpContextAccessor.HttpContext?.User?.Claims;
+
+
+            var idClaim = TryGetUserId();
+            if (idClaim.IsError)
+                return Error.Forbidden();
+            var id = idClaim.Value;
+
+
+            var roleClaim = TryGetUserRole();
+            if (roleClaim.IsError)
+                return Error.Forbidden();
+            var role = roleClaim.Value;
+
+
 
             if (id == Guid.Empty || string.IsNullOrEmpty(role))
             {
@@ -31,5 +41,27 @@ namespace HealLink.Api.Services
 
 
         }
+        private ErrorOr<string> TryGetUserRole()
+        {
+            var role = _httpContextAccessor.HttpContext?.User?.Claims
+                .FirstOrDefault(c => c.Type == "myRole")?.Value;
+
+            if (string.IsNullOrEmpty(role))
+                return Error.Forbidden(description: "Missing or invalid role");
+
+            return role;
+        }
+        private ErrorOr<Guid> TryGetUserId()
+        {
+            var idClaim = _httpContextAccessor.HttpContext?.User?.Claims
+                .FirstOrDefault(c => c.Type == "id");
+
+            if (idClaim == null || !Guid.TryParse(idClaim.Value, out var userId))
+                return Error.Forbidden(description: "Invalid or missing user ID");
+
+            return userId;
+        }
+
+
     }
 }

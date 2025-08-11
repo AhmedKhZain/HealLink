@@ -18,39 +18,23 @@ namespace HealLink.Infrastructure.Persistence.Repositories.Users
             _context = context;
         }
 
-
         public async Task AddUserAsync(User user)
             => await _context.Users.AddAsync(user);
 
-
-
-
         public async Task<bool> ExistsByEmailAsync(string email)
-        => await _context.Users.AnyAsync(u => u.Email == email);
+            => await _context.Users.AnyAsync(u => u.Email == email);
 
+        public async Task<User?> GetByEmailAsync(string email, bool tracking = false)
+            => tracking
+                ? await _context.Users.FirstOrDefaultAsync(u => u.Email == email)
+                : await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email);
 
-
-
-        public Task<User?> GetByEmailAsync(string email)
-        => _context.Users
-            .FirstOrDefaultAsync(u => u.Email == email);
-
-        public async Task<User?> GetByEmailAsNoTrckingAsync(string email)
-        => await _context.Users
-            .AsNoTracking()
-            .FirstOrDefaultAsync(u => u.Email == email);
-
-
-
-
-        public async Task<User?> GetByIdAsync(Guid userId)
-        => await _context.Users
-            .FirstOrDefaultAsync(u => u.Id == userId);
+        public async Task<User?> GetByIdAsync(Guid userId, bool tracking = false)
+            => tracking
+                ? await _context.Users.FirstOrDefaultAsync(u => u.Id == userId)
+                : await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == userId);
 
         public void Update(User user)
-        => _context.Users
-            .Update(user);
-
- 
+            => _context.Users.Update(user);
     }
 }

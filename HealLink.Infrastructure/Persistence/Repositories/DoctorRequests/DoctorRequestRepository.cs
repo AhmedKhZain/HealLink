@@ -21,7 +21,16 @@ namespace HealLink.Infrastructure.Persistence.Repositories.DoctorRequests
         public void DeleteDoctorRequest(DoctorRequest doctorRequest)
         => _context.DoctorRequests.Remove(doctorRequest);
 
-        public async Task<IEnumerable<DoctorRequest>> GetDoctorRequestsByDoctorIdAsync(Guid doctorId, bool Tracking = false)
+        public async Task<bool> ExistsByIdAsync(Guid requestId)
+        => await _context.DoctorRequests
+            .AsNoTracking()
+            .AnyAsync(d => d.Id == requestId);
+
+        public async Task<DoctorRequest?> GetById(Guid requestId)
+        => await _context.DoctorRequests
+            .FirstOrDefaultAsync(d => d.Id == requestId);
+
+        public async Task<IEnumerable<DoctorRequest>?> GetDoctorRequestsByDoctorIdAsync(Guid doctorId, bool Tracking = false)
         {
             return Tracking
                 ? await _context.DoctorRequests
@@ -34,7 +43,7 @@ namespace HealLink.Infrastructure.Persistence.Repositories.DoctorRequests
 
         }
 
-        public async Task<IEnumerable<DoctorRequest>> GetDoctorRequestsByPatientIdAsync(Guid patientId, bool Tracking = false)
+        public async Task<IEnumerable<DoctorRequest>?> GetDoctorRequestsByPatientIdAsync(Guid patientId, bool Tracking = false)
         {
             return Tracking
                 ? await _context.DoctorRequests
@@ -46,26 +55,30 @@ namespace HealLink.Infrastructure.Persistence.Repositories.DoctorRequests
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<DoctorRequest?>> GetRequestsHistoryByDoctorIdAsync(Guid doctorId, bool Tracking = false)
+        public async Task<IEnumerable<DoctorRequest>?> GetRequestsHistoryByDoctorIdAsync(Guid doctorId, int PageNum =1, int PageSize=12, bool Tracking = false)
         {
             return Tracking
                 ? await _context.DoctorRequests
-                .Where(d => d.SenderId == doctorId && d.IsAccepted != null)
+                .Where(d => d.SenderId == doctorId)
+                .Skip((PageNum - 1) * PageSize).Take(PageSize)
                 .ToListAsync()
                 : await _context.DoctorRequests
-                .Where(d => d.SenderId == doctorId && d.IsAccepted != null)
+                .Where(d => d.SenderId == doctorId)
+                .Skip((PageNum - 1) * PageSize).Take(PageSize)
                 .AsNoTracking()
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<DoctorRequest?>> GetRequestsHistoryByPatientIdAsync(Guid patientId, bool Tracking = false)
+        public async Task<IEnumerable<DoctorRequest>?> GetRequestsHistoryByPatientIdAsync(Guid patientId,int PageNum =1,int PageSize=12, bool Tracking = false)
         {
             return Tracking
                 ? await _context.DoctorRequests
                 .Where(d => d.SenderId == patientId && d.IsAccepted != null)
+                .Skip((PageNum - 1) * PageSize).Take(PageSize)
                 .ToListAsync()
                 : await _context.DoctorRequests
                 .Where(d => d.SenderId == patientId && d.IsAccepted != null)
+                .Skip((PageNum - 1) * PageSize).Take(PageSize)
                 .AsNoTracking()
                 .ToListAsync();
         }

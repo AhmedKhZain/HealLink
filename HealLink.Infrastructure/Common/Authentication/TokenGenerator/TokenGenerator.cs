@@ -34,7 +34,7 @@ namespace HealLink.Infrastructure.Common.Authentication.TokenGenerator
             {
                 new Claim("id", user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim("role", user.Role.ToString()),
+                new Claim("myRole", user.Role.Name.ToString()),
                 new Claim("name", user.FullName)
             };
 

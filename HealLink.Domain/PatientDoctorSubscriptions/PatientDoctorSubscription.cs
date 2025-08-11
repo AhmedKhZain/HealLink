@@ -47,7 +47,7 @@ namespace HealLink.Domain.PatientDoctorSubscriptions
             Id = Guid.NewGuid();
             PatientId = patientId;
             DoctorId = doctorId;
-
+            ExpiryDate= DateTime.UtcNow;
 
         }
 

@@ -15,9 +15,9 @@ namespace HealLink.Api
             // Add services to the container.
 
             builder.Services
-                .AddApplication()
+                .AddPresentation()
                 .AddInfrastructure(builder.Configuration)
-                .AddPresentation();
+                .AddApplication();
 
 
 
@@ -28,7 +28,6 @@ namespace HealLink.Api
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
-                app.MapOpenApi();
             }
 
             
