@@ -17,6 +17,15 @@ namespace HealLink.Infrastructure.Services.Email
         public EmailService(IOptions<EmailSettings> options)
         {
             _settings = options.Value;
+            Console.WriteLine(_settings.Host);
+            Console.WriteLine(_settings.Port);
+            Console.WriteLine(_settings.From);
+            Console.WriteLine(_settings.Password);
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+
         }
 
         public async Task SendEmailAsync(string to, string subject, string body)

@@ -1,0 +1,10 @@
+### LogIn Request
+POST http://localhost:5001/Authentication/login
+Content-Type: application/json
+
+{
+  "email": "ak2156@fayoum.edu.eg",
+  "password": "too4room2156"
+}
+
+###eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFjMjRkMDMzLTZkYmYtNGZkZi05MjNmLWFlZWY3MDkwNTZkNSIsImVtYWlsIjoiYWsyMTU2QGZheW91bS5lZHUuZWciLCJteVJvbGUiOiJQYXRpZW50IiwibmFtZSI6IkFobWVkIiwiZXhwIjoxNzU0MzY3NjM4LCJpc3MiOiJBU01BIiwiYXVkIjoiQVNNQVVzZXIifQ.hyWKY1Mq61QBNuYNmkAvmgddN230dKTv71KBe9taB3I

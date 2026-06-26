@@ -86,7 +86,7 @@ public class AuthenticationController: ApiController
 
 
     }
-    [HttpGet("loginWithRefrshToken")]
+    [HttpPost("loginWithRefrshToken")]
     public async Task<IActionResult> LogInWithRefreshToken(LoginWithRefreshTokenRequest request)
     {
         var query = new LogInWithRefreshTokenQuery(request.RefreshToken,request.UserId);

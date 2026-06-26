@@ -13,7 +13,6 @@ namespace HealLink.Infrastructure.Services.Payment
         {
             _settings = stripeOptions.Value;
 
-            // Set the API key globally (once)
             StripeConfiguration.ApiKey = _settings.SecretKey;
         }
 
@@ -21,7 +20,7 @@ namespace HealLink.Infrastructure.Services.Payment
         {
             var options = new PaymentIntentCreateOptions
             {
-                Amount = (long)(plan.Price * 100), // Convert to cents
+                Amount = (long)(plan.Price * 100),
                 Currency = _settings.Currency,
                 PaymentMethod = paymentMethodId,
                 ConfirmationMethod = "manual",

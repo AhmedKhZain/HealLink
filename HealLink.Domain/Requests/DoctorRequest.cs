@@ -61,7 +61,6 @@ namespace HealLink.Domain.Requests
             if (IsAccepted != null)
                 throw new InvalidOperationException();
 
-
             if (Type == RequestType.Renewal)
             {
                 Subscription.RenewSubscription(TimeSpan.FromDays(Plan.Value));
@@ -76,7 +75,6 @@ namespace HealLink.Domain.Requests
                 IsAccepted = true;
                 DecisionDate = DateTime.UtcNow;
             }
-
             return Subscription!;
         }
         public void SetPayment(Payment payment)

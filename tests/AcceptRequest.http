@@ -1,0 +1,5 @@
+@token =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQyNTJhNDg5LTM5MTAtNDg4Yy1hZGUxLTQzNzlhMzZkNjViOSIsImVtYWlsIjoiYWhtZWQua2guemFpbjIxNTZAZ21haWwuY29tIiwibXlSb2xlIjoiUGF0aWVudCIsIm5hbWUiOiJBaG1lZCB6YWluIiwiZXhwIjoxNzcxMzAyMjAzLCJpc3MiOiJIZWFsTGluayIsImF1ZCI6IkhlYWxMaW5rVXNlcnMifQ.uLrQlzyY4YVm-Svn6E4iZ4ch764fvfvqM4JKbzxFUjo
+@baseUrl=http://localhost:5001/
+PUT {{baseUrl}}api/Doctor/AcceptRequest/C2D0BC88-1F8B-4D93-8FC7-B7C722021DF9
+Content-Type: application/json
+Authorization: Bearer {{token}}

@@ -10,4 +10,5 @@ namespace healLink.Application.Common.Interfaces.Repositories
         Task<IEnumerable<MedicalHistory>> GetMedicalHistoriesByUserIdAsync(Guid userId, MedicalHistoryType? Type=null, int PageSize = 12, int PageNum = 0, bool tracking = false);
         void DeleteMedicalHistory(MedicalHistory medicalHistory);
     }
+
 }

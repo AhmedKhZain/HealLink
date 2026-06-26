@@ -17,7 +17,6 @@ public class MakeSubscriptionRequestCommandHandler
     IPaymentRepository paymentRepository,
     IPaymentService paymentService,
     ISubscriptionRepository subscriptionRepository)
-
     : IRequestHandler<MakeSubscriptionRequestCommand, ErrorOr<Guid>>
 {
     public async Task<ErrorOr<Guid>> Handle(MakeSubscriptionRequestCommand request, CancellationToken cancellationToken)
@@ -25,7 +24,7 @@ public class MakeSubscriptionRequestCommandHandler
         if (!await patientRepository.ExistsByUserIdAsync(request.PatientId)
             || !await doctorRepository.ExistsAsync(request.DoctorId))
         {
-            return Error.NotFound();
+            return Error.NotFound( description:"not found doctor or patient ");
         }
 
         var plan = DoctorSubscriptionPlan.FromName(request.plan);

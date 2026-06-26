@@ -1,0 +1,16 @@
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQ3YmFiM2MxLTlmMzAtNGIxNy05NDdhLTUzMmY1YzllYzJjZCIsImVtYWlsIjoiZWx0d29vM21AZ21haWwuY29tIiwibXlSb2xlIjoiRG9jdG9yIiwibmFtZSI6IkFobWVkIEtoLiBaYWluIiwiZXhwIjoxNzU0MzY3NDc4LCJpc3MiOiJBU01BIiwiYXVkIjoiQVNNQVVzZXIifQ.txZW-Gg0SZBjj0X0kIOWGX8hXsODhKdJ1Ujs-nEBti8
+
+@baseUrl=http://localhost:5001/
+PUT {{baseUrl}}api/Doctor/CancelRequest/2CE5BBC3-987E-4089-B500-24CA56B16EBD
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+
+
+
+
+
+
+
+

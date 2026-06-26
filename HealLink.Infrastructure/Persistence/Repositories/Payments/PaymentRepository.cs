@@ -1,11 +1,6 @@
 ﻿using healLink.Application.Common.Interfaces.Repositories;
 using HealLink.Domain.Payments;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HealLink.Infrastructure.Persistence.Repositories.Payments
 {

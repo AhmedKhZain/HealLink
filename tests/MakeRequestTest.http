@@ -1,0 +1,14 @@
+@token =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI0ZTc3ODA5LTUxYjAtNGZlZi1hY2ExLTIwOGMzZjZkMjFmYiIsImVtYWlsIjoiYWsyMTU2QGZheW91bS5lZHUuZWciLCJteVJvbGUiOiJQYXRpZW50IiwibmFtZSI6IkFobWVkIEtoIFphaW4iLCJleHAiOjE3NzEzMDQzMjcsImlzcyI6IkhlYWxMaW5rIiwiYXVkIjoiSGVhbExpbmtVc2VycyJ9.WJNmwQ7GlbFC6-Hatr1uUk-ORggH9BF3y5l9VgOOtoY
+### Make Request
+POST http://localhost:5001/api/Request/MakeNewSubscriptionRequest
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "patientId": "24e77809-51b0-4fef-aca1-208c3f6d21fb",
+  "doctorId": "cc2b54a9-697d-4938-a9de-0881c47bae96",
+  "plan": "Weekly",
+  "paymentId": "pm_card_visa",
+  "requestTypename": "Initial",
+  "fileLink":"whatever!!"
+}

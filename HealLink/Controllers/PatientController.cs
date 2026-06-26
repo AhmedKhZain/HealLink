@@ -42,8 +42,6 @@ namespace HealLink.Api.Controllers
         {
             var command = new DeleteMedicalHistoryCommand(id);
             var result = await _sender.Send(command);
-            
-
             return result.Match(
                 success => Ok("Patient deleted successfully."),
                 error => Problem(error)

@@ -37,7 +37,7 @@ ScaffoldingReadMe.txt
 .vs/**/CopilotIndices/
 .vs/**/SemanticSymbols.db
 .vs/**/CodeChunks.db
-
+.vs
 ## NuGet
 *.nupkg
 *.snupkg

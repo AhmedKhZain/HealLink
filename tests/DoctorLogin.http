@@ -1,0 +1,9 @@
+### LogIn Request
+POST http://localhost:5001/Authentication/login
+Content-Type: application/json
+
+{
+  "email": "eltwoo3m@gmail.com",
+  "password": "too4room2156"
+}
+###eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQ3YmFiM2MxLTlmMzAtNGIxNy05NDdhLTUzMmY1YzllYzJjZCIsImVtYWlsIjoiZWx0d29vM21AZ21haWwuY29tIiwibXlSb2xlIjoiRG9jdG9yIiwibmFtZSI6IkFobWVkIEtoLiBaYWluIiwiZXhwIjoxNzU0MzY3NDc4LCJpc3MiOiJBU01BIiwiYXVkIjoiQVNNQVVzZXIifQ.txZW-Gg0SZBjj0X0kIOWGX8hXsODhKdJ1Ujs-nEBti8

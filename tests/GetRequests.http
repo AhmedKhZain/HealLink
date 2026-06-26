@@ -1,0 +1,6 @@
+@token =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNjMmI1NGE5LTY5N2QtNDkzOC1hOWRlLTA4ODFjNDdiYWU5NiIsImVtYWlsIjoiZWx0d28zbUBnbWFpbC5jb20iLCJteVJvbGUiOiJEb2N0b3IiLCJuYW1lIjoiRHIgQWhtZWQgWmFpbiIsImV4cCI6MTc3MTMwMzc5NSwiaXNzIjoiSGVhbExpbmsiLCJhdWQiOiJIZWFsTGlua1VzZXJzIn0.LVZcXvBvERm-HqnBfFTJ7izcGOsKknosnTCQmfhrjrs
+### get Requests
+GET http://localhost:5001/api/Request/GetRequests/cc2b54a9-697d-4938-a9de-0881c47bae96
+Content-Type: application/json
+Authorization: Bearer {{token}}
+

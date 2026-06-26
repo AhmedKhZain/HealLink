@@ -12,6 +12,7 @@ using HealLink.Domain.Requests;
 using HealLink.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Configuration;
 using System.Transactions;
 
 namespace HealLink.Infrastructure.Persistence
@@ -20,7 +21,7 @@ namespace HealLink.Infrastructure.Persistence
     {
 
 
-        public HealLinkDbContext(DbContextOptions<HealLinkDbContext> options) : base(options)
+        public HealLinkDbContext(DbContextOptions<HealLinkDbContext> options, IConfiguration configuration) : base(options)
         {
         }
 

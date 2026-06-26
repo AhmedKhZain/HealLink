@@ -16,6 +16,7 @@ namespace HealLink.Infrastructure.Persistence.Repositories.MedicalHistories
         public async Task AddMedicalHistoryAsync(MedicalHistory medicalHistory)
             => await _context.MedicalHistories.AddAsync(medicalHistory);
 
+
         public void DeleteMedicalHistory(MedicalHistory medicalHistory)
             => _context.MedicalHistories.Remove(medicalHistory);
 

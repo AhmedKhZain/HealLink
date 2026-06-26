@@ -1,0 +1,10 @@
+### regstration Request
+POST http://localhost:5001/Authentication/register
+Content-Type: application/json
+
+{
+  "fullName": "Ahmed",
+  "nameToShow": "Ahmed Kh",
+  "email": "ak2157@fayoum.edu.eg",
+  "password": "too4room2156"
+}
